@@ -82,18 +82,31 @@ func main() {
 			return // Exit the program
 		}
 
-		// Step 6c: Find which character positions need to be colored
+		// Step 6c: Check if substring is empty
+		// If user provided an empty substring, we show a warning and render normally
+		if opts.Substring == "" && len(os.Args) > 3 {
+			// User explicitly gave an empty substring like: --color=red "" "text"
+			// This is probably a mistake, so we warn them
+			fmt.Println("Warning: Empty substring provided. Rendering without color.")
+			fmt.Println()
+			// Render normally without color
+			output := RenderInput(opts.Text, banner)
+			fmt.Print(output)
+			return
+		}
+
+		// Step 6d: Find which character positions need to be colored
 		// This returns a slice of integers representing positions
 		// Example: "a kitten" with substring "kit" returns [2, 3, 4]
-		// If substring is empty, it returns ALL positions (color everything)
+		// If substring is empty (no substring arg), it returns ALL positions (color everything)
 		indexes := FindSubstringIndexes(opts.Text, opts.Substring)
 
-		// Step 6d: Render the text with colors
-		// This is our NEW function that we'll create next
+		// Step 6e: Render the text with colors
+		// This is our NEW function that we created
 		// It renders character-by-character and adds color codes where needed
 		output := RenderWithColor(opts.Text, banner, colorCode, indexes)
 
-		// Step 6e: Print the colored output
+		// Step 6f: Print the colored output
 		fmt.Print(output)
 
 	} else {
@@ -101,11 +114,11 @@ func main() {
 		// User didn't specify --color flag
 		// Render normally, just like the old ascii-art program
 
-		// Step 6f: Render the text without colors
+		// Step 6g: Render the text without colors
 		// This is our existing function from before
 		output := RenderInput(opts.Text, banner)
 
-		// Step 6g: Print the normal output
+		// Step 6h: Print the normal output
 		fmt.Print(output)
 	}
 
