@@ -25,8 +25,13 @@ func LoadBanner(path string) (Banner, error) {
 		return nil, err
 	}
 
+	// Convert to string and handle both Unix (\n) and Windows (\r\n) line endings
+	// Replace \r\n with \n first, then remove any remaining \r
+	content := strings.ReplaceAll(string(data), "\r\n", "\n")
+	content = strings.ReplaceAll(content, "\r", "\n")
+
 	// split file into lines
-	lines := strings.Split(string(data), "\n")
+	lines := strings.Split(content, "\n")
 
 	// create the banner map
 	banner := make(Banner)
